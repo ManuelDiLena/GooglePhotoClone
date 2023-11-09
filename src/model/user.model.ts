@@ -1,7 +1,8 @@
 import Mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 
-interface IUser extends Mongoose.Document {
+export interface IUser extends Mongoose.Document {
+    id?: string;
     username: string;
     password: string;
     name?: string;
@@ -26,6 +27,7 @@ UserSchema.pre('save', function (next) {
             document.password = hash;
             next();
         });
+        
     } else {
         next();
     }

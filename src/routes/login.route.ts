@@ -1,5 +1,5 @@
 import express, { NextFunction, Request, Response } from 'express';
-import User from '../model/user.model';
+import User, { IUser } from '../model/user.model';
 
 export const router = express.Router();
 
@@ -11,12 +11,52 @@ router.get('/signup', (req: Request, res: Response) => {
     res.render('login/signup');
 });
 
-router.post('/auth', (req: Request, res: Response, next: NextFunction) => {});
+// Route to authenticate in the app
+router.post('/auth', async (req: Request, res: Response, next: NextFunction) => {
+    const { username, password }: IUser = req.body;
 
+    if (!username || !password) {
+        console.log('A field is missing');
+        res.redirect('/login');
+
+    } else {
+        try {
+            const user = new User();
+            const userExists = await user.usernameExists(username);
+
+            if (userExists) {
+                const userFound = await User.findOne({ username: username });
+
+                if (userFound) {
+                    const passCorrect = await user.isCorrectPassword(
+                        password,
+                        userFound.password
+                    );
+    
+                    if (passCorrect) {
+                        req.session.user = userFound;
+                        res.redirect('/home');
+    
+                    } else {
+                        return next(new Error('Username and/or password incorrect'));
+                    }
+                }
+
+            } else {
+                return next(new Error('User does not exist'));
+            }
+
+        } catch (err) {
+            res.redirect('/login');
+        }
+    }
+});
+
+// Route to register a new user
 router.post('/register', async (req: Request, res: Response, next: NextFunction) => {
 
-    console.log(req.body.username, req.body.password, req.body.name);
-    const { username, password, name }: {username: string, password:string, name: string} = req.body;
+    //console.log(req.body.username, req.body.password, req.body.name);
+    const { username, password, name }: IUser = req.body;
 
     if (!username || !password || !name) {
         console.log('Some field is missing');
@@ -26,12 +66,15 @@ router.post('/register', async (req: Request, res: Response, next: NextFunction)
         const userProps = { username, password, name };
         const user = new User(userProps);
 
-        const exists = await user.usernameExists(username);
+        try {
+            const exists = await user.usernameExists(username);
 
-        if (exists) res.redirect('/signup');
+            if (exists) res.redirect('/signup');
 
-        await user.save();
+            await user.save();
 
-        res.redirect('/login');
+        } catch (err) {
+            res.redirect('/login');
+        }
     }
 });

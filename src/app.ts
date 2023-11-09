@@ -5,7 +5,15 @@ import { join } from 'path';
 import session from 'express-session';
 import mongoose from 'mongoose';
 
-import { router as HomeRouter } from './routes/login.route';
+import { router as LoginRouter } from './routes/login.route';
+import { router as HomeRouter } from './routes/home.route';
+import { IUser } from './model/user.model';
+
+declare module 'express-session' {
+    interface Session {
+        user: IUser;
+    }
+}
 
 export const app = express();
 
@@ -27,6 +35,7 @@ app.use(
     })
 );
 
+app.use(LoginRouter);
 app.use(HomeRouter);
 
 // Db connection configuration
