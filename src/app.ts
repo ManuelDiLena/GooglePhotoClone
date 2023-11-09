@@ -5,12 +5,15 @@ import { join } from 'path';
 import session from 'express-session';
 import mongoose from 'mongoose';
 
+import { router as HomeRouter } from './routes/login.route';
+
 export const app = express();
 
 // Middleware configuration
 dotenv.config();
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 app.use(express.static(join(__dirname, '../public')));
 app.set('views', join(__dirname, 'views'));
@@ -23,6 +26,8 @@ app.use(
         saveUninitialized: false,
     })
 );
+
+app.use(HomeRouter);
 
 // Db connection configuration
 const options: mongoose.ConnectOptions = {
