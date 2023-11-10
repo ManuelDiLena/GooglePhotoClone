@@ -11,9 +11,9 @@
 <body>
     <%- include('../layout/navbar') %>
 
-    <h1>Hi, <%= user.name %></h1>
+    <h1 class="p-2">Hi, <%= user.name %></h1>
 
-    <form action="/upload" method="post" enctype="multipart/form-data">
+    <form action="/upload" method="post" enctype="multipart/form-data" class="p-2">
         <input type="file" name="photos" id="fileInput" class="">
         <input type="submit" id="bPick" value="Upload Photo" class="btn btn-primary p-2 m-2">
     </form>

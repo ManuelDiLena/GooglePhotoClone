@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express';
 import multer from 'multer';
 import Photo from '../model/photo.model';
+import Album from '../model/album.model';
 
 // Function to store the photos that are uploaded
 const storage = multer.diskStorage({
@@ -22,7 +23,8 @@ export const router = express.Router();
 router.get('/home', async (req: Request, res: Response) => {
     try {
         const photos = await Photo.find({ userid: req.session.user._id! });
-        res.render('home/index', { user: req.session.user, photos });
+        const albums = await Album.find({ userid: req.session.user._id! });
+        res.render('home/index', { user: req.session.user, photos, albums });
 
     } catch (err) {
         res.render('home/index', { user: req.session.user });
