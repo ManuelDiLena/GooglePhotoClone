@@ -8,6 +8,7 @@ import mongoose from 'mongoose';
 import { router as LoginRouter } from './routes/login.route';
 import { router as HomeRouter } from './routes/home.route';
 import { router as AlbumsRouter } from './routes/albums.route';
+import { router as PhotosRouter } from './routes/photos.route';
 
 import { IUser } from './model/user.model';
 
@@ -40,6 +41,7 @@ app.use(
 app.use(LoginRouter);
 app.use(HomeRouter);
 app.use(AlbumsRouter);
+app.use(PhotosRouter);
 
 // Db connection configuration
 const options: mongoose.ConnectOptions = {
