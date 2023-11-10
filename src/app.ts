@@ -7,6 +7,8 @@ import mongoose from 'mongoose';
 
 import { router as LoginRouter } from './routes/login.route';
 import { router as HomeRouter } from './routes/home.route';
+import { router as AlbumsRouter } from './routes/albums.route';
+
 import { IUser } from './model/user.model';
 
 declare module 'express-session' {
@@ -37,6 +39,7 @@ app.use(
 
 app.use(LoginRouter);
 app.use(HomeRouter);
+app.use(AlbumsRouter);
 
 // Db connection configuration
 const options: mongoose.ConnectOptions = {
