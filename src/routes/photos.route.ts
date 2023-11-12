@@ -53,5 +53,23 @@ router.post('/remove-favorite', async (req: Request, res: Response) => {
 });
 
 // Route to preview a photo
-router.get('/view/:id', async (req: Request, res: Response, next: NextFunction) => {});
+router.get('/view/:id', async (req: Request, res: Response, next: NextFunction) => {
+    const photoid = req.params.id as string;
+    const origin = req.query.origin as string;
+
+    try {
+        const photo = await Photo.findById(photoid);
+        const albums = await Album.find({ userid: req.session.user._id! });
+
+        res.render('layout/preview', {
+            user: req.session.user,
+            photo,
+            albums,
+            origin,
+        });
+
+    } catch (err) {
+        console.log(err);
+    }
+});
 

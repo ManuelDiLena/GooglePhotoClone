@@ -21,7 +21,9 @@
                 <input type="checkbox" class="select-photo" value="<%= photo._id %>">
             </div>
 
-            <img src="http://localhost:3000/images/<%= photo.filename %>" />
+            <a href="/view/<%= photo._id %>?origin=<%= origin %>">
+                <img src="http://localhost:3000/images/<%= photo.filename %>" />
+            </a>
 
             <div class="actions-container">
                 <% if(photo.userid === user._id) {
