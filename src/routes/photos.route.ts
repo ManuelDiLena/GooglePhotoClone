@@ -1,6 +1,6 @@
 import express, { NextFunction, Request, Response } from 'express';
 import Album, { IAlbum } from '../model/album.model';
-import Photo, { IPhotoReq, IPhoto } from '../model/photo.model';
+import Photo, { IPhotoReq, IPhotoFavReq, IPhoto } from '../model/photo.model';
 
 export const router = express.Router();
 
@@ -25,13 +25,32 @@ router.post('/add-to-album', async (req: Request, res: Response) => {
     res.redirect('/home');
 });
 
-// Rute to change information
-router.post('/update-photos', (req: Request, res: Response) => {});
-
 // Routes to add and remove from favorites
-router.post('/add-favorite', async (req: Request, res: Response) => {});
+router.post('/add-favorite', async (req: Request, res: Response) => {
+    const { photoid, origin }: IPhotoFavReq = req.body;
 
-router.post('/remove-favorite', async (req: Request, res: Response) => {});
+    try {
+        await Photo.findByIdAndUpdate(photoid, {
+            $set: { favorite: true as any },
+        });
+
+        res.redirect(origin);
+
+    } catch (err) {}
+});
+
+router.post('/remove-favorite', async (req: Request, res: Response) => {
+    const { photoid, origin }: IPhotoFavReq = req.body;
+
+    try {
+        await Photo.findByIdAndUpdate(photoid, {
+            $set: { favorite: false as any },
+        });
+
+        res.redirect(origin);
+
+    } catch (err) {}
+});
 
 // Route to preview a photo
 router.get('/view/:id', async (req: Request, res: Response, next: NextFunction) => {});
