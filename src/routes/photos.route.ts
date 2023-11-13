@@ -4,8 +4,10 @@ import Photo, { IPhotoReq, IPhotoFavReq, IPhoto } from '../model/photo.model';
 
 export const router = express.Router();
 
+import { middleware } from '../middleware/auth.middleware';
+
 // Route to add a photo to an album
-router.post('/add-to-album', async (req: Request, res: Response) => {
+router.post('/add-to-album', middleware, async (req: Request, res: Response) => {
     const { ids, albumid }: IPhotoReq = req.body;
 
     const idPhotos = ids.split(',');
@@ -26,7 +28,7 @@ router.post('/add-to-album', async (req: Request, res: Response) => {
 });
 
 // Routes to add and remove from favorites
-router.post('/add-favorite', async (req: Request, res: Response) => {
+router.post('/add-favorite', middleware, async (req: Request, res: Response) => {
     const { photoid, origin }: IPhotoFavReq = req.body;
 
     try {
@@ -39,7 +41,7 @@ router.post('/add-favorite', async (req: Request, res: Response) => {
     } catch (err) {}
 });
 
-router.post('/remove-favorite', async (req: Request, res: Response) => {
+router.post('/remove-favorite', middleware, async (req: Request, res: Response) => {
     const { photoid, origin }: IPhotoFavReq = req.body;
 
     try {
@@ -53,7 +55,7 @@ router.post('/remove-favorite', async (req: Request, res: Response) => {
 });
 
 // Route to preview a photo
-router.get('/view/:id', async (req: Request, res: Response, next: NextFunction) => {
+router.get('/view/:id', middleware, async (req: Request, res: Response, next: NextFunction) => {
     const photoid = req.params.id as string;
     const origin = req.query.origin as string;
 

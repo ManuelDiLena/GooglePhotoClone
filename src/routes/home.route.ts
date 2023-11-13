@@ -19,8 +19,10 @@ const upload = multer({ storage: storage });
 
 export const router = express.Router();
 
+import { middleware } from '../middleware/auth.middleware';
+
 // Route to show the home page
-router.get('/home', async (req: Request, res: Response) => {
+router.get('/home', middleware, async (req: Request, res: Response) => {
     try {
         const photos = await Photo.find({ userid: req.session.user._id! });
         const albums = await Album.find({ userid: req.session.user._id! });
